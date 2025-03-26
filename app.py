@@ -1,14 +1,8 @@
-from dotenv import load_dotenv
-
-load_dotenv()
 import base64
 import streamlit as st
-import os
 import io
 import pdf2image
 import google.generativeai as genai
-
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 def get_gemini_response(input, pdf_content, prompt):
     model=genai.GenerativeModel('gemini-2.0-flash')
@@ -45,6 +39,11 @@ def input_pdf_setup(uploaded_file):
 
 st.set_page_config(page_title="ATS Resume EXpert")
 st.header("ATS Tracking System")
+user_api_key = st.text_input("Enter your Gemini API Key", type="password", 
+                           help="Get your API key from https://aistudio.google.com/app/apikey")
+st.subheader("Upload your resume and job description to get started")
+st.text("Made with ❤️ for fellow job seekers by Mouli")
+
 input_text=st.text_area("Job Description: ",key="input")
 uploaded_file=st.file_uploader("Upload your resume(PDF)...",type=["pdf"])
 
@@ -77,28 +76,37 @@ the job description. First the output should come as percentage and then keyword
 """
 
 if submit1:
-    if uploaded_file is not None:
+    if not user_api_key:
+        st.error("Please enter your Gemini API key to proceed.")
+    elif uploaded_file is not None:
+        genai.configure(api_key=user_api_key)
         pdf_content=input_pdf_setup(uploaded_file)
         response=get_gemini_response(input_prompt1,pdf_content,input_text)
-        st.subheader("The Response is")
+        st.subheader("Here you go")
         st.write(response)
     else:
         st.write("Please upload the resume")
 
 if submit2:
-    if uploaded_file is not None:
+    if not user_api_key:
+        st.error("Please enter your Gemini API key to proceed.")
+    elif uploaded_file is not None:
+        genai.configure(api_key=user_api_key)
         pdf_content=input_pdf_setup(uploaded_file)
         response=get_gemini_response(input_prompt2,pdf_content,input_text)
-        st.subheader("The Response is")
+        st.subheader("Here you go")
         st.write(response)
     else:
         st.write("Please upload the resume")
 
 elif submit3:
-    if uploaded_file is not None:
+    if not user_api_key:
+        st.error("Please enter your Gemini API key to proceed.")
+    elif uploaded_file is not None:
+        genai.configure(api_key=user_api_key)
         pdf_content=input_pdf_setup(uploaded_file)
         response=get_gemini_response(input_prompt3,pdf_content,input_text)
-        st.subheader("The Response is")
+        st.subheader("Here you go")
         st.write(response)
     else:
         st.write("Please upload the resume")
